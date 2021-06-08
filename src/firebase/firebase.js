@@ -1,5 +1,5 @@
 import { initializeApp, getApps } from "firebase/app"
-import { getFirestore, collection, getDocs,  doc, onSnapshot } from "firebase/firestore"
+import { getFirestore, collection, getDocs,  doc, onSnapshot, addDoc, serverTimestamp, updateDoc } from "firebase/firestore"
 
 if (!getApps().length) {
     initializeApp({
@@ -57,4 +57,34 @@ export const listenToQuestion = async (dispatch, questionId) => {
             }
         })
     })
+}
+
+export const createNewGame = async (dispatch) => {
+    const gameReference =  await addDoc(collection(db, "games"), {
+        currentQuestion: 0,
+        startDate: serverTimestamp()
+    });
+    const gameId = gameReference.id
+    await createNewQuestion(dispatch, gameId)
+    dispatch({
+        type: "questionUpdated",
+        payload: gameId
+    })
+}
+
+
+export const createNewQuestion = async (dispatch, gameId) => {
+    const questionRef = await addDoc(collection(doc(collection(db, "games"), gameId ), "questions"), {
+            voteOpened: true
+        })
+
+    //update currentQuestion with new questionId
+    const questionsCollectionRef = doc(collection(db, "games"), gameId )
+    const updateCurrentQuestionId = await updateDoc(questionsCollectionRef, {
+        currentQuestion: questionRef.id
+    })
+
+    console.log("question created",questionRef.id)
+
+   //TODO 
 }
