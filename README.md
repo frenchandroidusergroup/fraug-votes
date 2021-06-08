@@ -4,9 +4,9 @@ Simple realtime client app to display ongoing votes for a meetups/live questions
 
 ## TODO
 
-- [ ] add firebase and get questions,settings
+- [x] add firebase and get questions,settings
 - [ ] login for admin access + firestore rules
-- [ ] display speakers name/hashbang
+- [x] display speakers name/hashbang
 - [ ] display votes
 - [ ] display final results
 - [ ] toggle vote on/off
