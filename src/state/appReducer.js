@@ -1,3 +1,4 @@
+import { shuffle } from './shuffleSpeakers'
 
 export const DEFAULT_STATE = {
     questions: {
@@ -13,7 +14,9 @@ export const DEFAULT_STATE = {
     speakers: null,
     activeQuestion: null,
     questionsLoaded: false,
-    speakersLoaded: false
+    speakersLoaded: false,
+    speakersOrder: [],
+    speakersOrderCurrentIndex: 0,
 }
 
 
@@ -30,7 +33,15 @@ export const appReducer = (state, { type, payload }) => {
             return {
                 ...state,
                 speakers: payload,
-                speakersLoaded: true
+                speakersLoaded: true,
+                speakersOrder: shuffle(Object.keys(payload)),
+                speakersOrderCurrentIndex: 0
+            }
+        case "speakersOrderShuffled":
+            return {
+                ...state,
+                speakersOrder: payload,
+                speakersOrderCurrentIndex: 0
             }
         case "activeQuestionChanged":
             return {
