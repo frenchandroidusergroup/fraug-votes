@@ -1,67 +1,48 @@
-import { createMuiTheme, CssBaseline, responsiveFontSizes, ThemeProvider } from '@material-ui/core'
+import React, { useReducer } from "react"
+import { CssBaseline, ThemeProvider } from '@material-ui/core'
 import {
     Route,
     BrowserRouter as Router,
     Switch,
 } from 'react-router-dom'
-import { HomeScreen } from './HomeScreen'
-import { CounterScreen } from './CounterScreen'
-import { FinalScoreScreen } from './FinalScoreScreen'
-import { VotesResultsScreen } from './VotesResultsScreen'
+import { HomeScreen } from './screens/HomeScreen'
+import { CounterScreen } from './screens/CounterScreen'
+import { FinalScoreScreen } from './screens/FinalScoreScreen'
+import { VotesResultsScreen } from './screens/VotesResultsScreen'
+import { theme } from './theme'
+import { QuestionsListener } from './firebase/QuestionsListener'
+import { AppLoader } from './AppLoader'
+import "./firebase/firebase"
+import { appReducer, DEFAULT_STATE } from './state/appReducer'
+import {StateContext, DispatchContext} from './AppContext'
 
+export const App = () => {
+    const [state, dispatch] = useReducer(appReducer, DEFAULT_STATE)
 
+    return (
+        <div>
+            <CssBaseline/>
+            <main>
+                <DispatchContext.Provider value={dispatch}>
+                    <StateContext.Provider value={state}>
+                        <QuestionsListener/>
+                        <ThemeProvider theme={theme}>
+                            <AppLoader>
+                                <Router>
+                                    <Switch>
+                                        <Route exact path="/" component={HomeScreen}/>
+                                        <Route path="/counter/:name" component={CounterScreen}/>
+                                        <Route path="/votes" component={VotesResultsScreen}/>
+                                        <Route path="/scores" component={FinalScoreScreen}/>
 
-const theme = responsiveFontSizes(
-    createMuiTheme({
-        palette: {
-            type: 'light',
-            primary: {
-                light: "#d3f3a4",
-                main: "#99BF52",
-                dark: "#637d2d",
-                contrastText: '#fff',
-                inputLabel: '#99BF52',
-            },
-            secondary: {
-                light: '#6ec6ff',
-                main: '#2091eb',
-                dark: '#0069c0',
-                contrastText: '#fff',
-                buttonSecondaryBackground: '#fff',
-                buttonSecondaryText: '#111',
-            },
-        },
-        typography: {
-            h2: {
-                fontSize: 40,
-            },
-            h3: {
-                fontSize: 28,
-            },
-        },
-    })
-)
-
-function App() {
-  return (
-    <div>
-        <CssBaseline/>
-        <main>
-            <ThemeProvider theme={theme}>
-                <Router>
-                    <Switch>
-                        <Route exact path="/" component={HomeScreen} />
-                        <Route path="/counter/:name" component={CounterScreen} />
-                        <Route path="/votes" component={VotesResultsScreen} />
-                        <Route path="/scores" component={FinalScoreScreen} />
-
-                        <Route component={HomeScreen} status={404} />
-                    </Switch>
-                </Router>
-            </ThemeProvider>
-        </main>
-    </div>
-  );
+                                        <Route component={HomeScreen} status={404}/>
+                                    </Switch>
+                                </Router>
+                            </AppLoader>
+                        </ThemeProvider>
+                    </StateContext.Provider>
+                </DispatchContext.Provider>
+            </main>
+        </div>
+    )
 }
-
-export default App;

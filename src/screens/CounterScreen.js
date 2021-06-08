@@ -5,7 +5,7 @@ import {
     useParams
 } from "react-router-dom"
 import useCountDown from 'react-countdown-hook'
-import { Countdown } from './components/Countdown'
+import { Countdown } from '../components/Countdown'
 
 export const CounterScreen = () => {
     const [timeLeft, { start, pause, resume, reset }] = useCountDown(20000)
