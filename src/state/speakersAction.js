@@ -1,3 +1,13 @@
+export const nextSpeakerAction = (dispatch) => {
+    dispatch({
+        type: "nextSpeaker",
+    })
+}
+export const prevSpeakerAction = (dispatch) => {
+    dispatch({
+        type: "prevSpeaker",
+    })
+}
 export const shuffleSpeakersAction = (state, dispatch) => {
     const speakerIds =Object.keys(state.speakers)
 
