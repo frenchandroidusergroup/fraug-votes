@@ -1,4 +1,4 @@
-import { shuffle } from './shuffleSpeakers'
+import { shuffle } from './speakersAction'
 
 export const DEFAULT_STATE = {
     questions: {
@@ -42,6 +42,16 @@ export const appReducer = (state, { type, payload }) => {
                 ...state,
                 speakersOrder: payload,
                 speakersOrderCurrentIndex: 0
+            }
+        case "nextSpeaker":
+            return {
+                ...state,
+                speakersOrderCurrentIndex: state.speakersOrderCurrentIndex +1
+            }
+        case "prevSpeaker":
+            return {
+                ...state,
+                speakersOrderCurrentIndex: state.speakersOrderCurrentIndex -1
             }
         case "activeQuestionChanged":
             return {

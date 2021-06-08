@@ -10,6 +10,7 @@ Simple realtime client app to display ongoing votes for a meetups/live questions
 - [ ] display votes
 - [ ] display final results
 - [ ] toggle vote on/off
+- [ ] add sound on countdown finished
 
 ## Available Scripts
 

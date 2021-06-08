@@ -31,7 +31,7 @@ export const App = () => {
                                 <Router>
                                     <Switch>
                                         <Route exact path="/" component={HomeScreen}/>
-                                        <Route path="/counter/:name" component={CounterScreen}/>
+                                        <Route path="/counter/:speakerId" render={props => <CounterScreen key={props.match.params.speakerId} /> }/>
                                         <Route path="/votes" component={VotesResultsScreen}/>
                                         <Route path="/scores" component={FinalScoreScreen}/>
 
