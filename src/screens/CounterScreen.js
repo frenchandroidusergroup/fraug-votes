@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Box, Button, Container, Typography } from '@material-ui/core'
 import {
     Link,
@@ -54,6 +54,10 @@ export const CounterScreen = () => {
             isPaused: false
         })
     }
+
+    useEffect(() => {
+        start() // auto start on component mount
+    }, [start])
 
     const prevSpeakerId = state.speakersOrder[state.speakersOrderCurrentIndex -1]
     const nextSpeakerId = state.speakersOrder[state.speakersOrderCurrentIndex +1]
