@@ -83,8 +83,4 @@ export const createNewQuestion = async (dispatch, gameId) => {
     const updateCurrentQuestionId = await updateDoc(questionsCollectionRef, {
         currentQuestion: questionRef.id
     })
-
-    console.log("question created",questionRef.id)
-
-   //TODO 
 }
