@@ -1,14 +1,14 @@
 import React from 'react'
 import { Box, useTheme } from '@material-ui/core'
 
-export const Countdown = ({value}) => {
+export const Countdown = ({value, size, fontSize}) => {
     const theme = useTheme()
 
-    return <Box fontSize={150} bgcolor={theme.palette.primary.main}
+    return <Box fontSize={fontSize} bgcolor={theme.palette.primary.main}
                 boxShadow="0 2px 4px rgba(0,0,0,0.5)"
                 borderRadius={800}
-                width={400}
-                height={400}
+                width={size}
+                height={size}
                 display="flex"
                 alignItems="center"
                 justifyContent="center"
