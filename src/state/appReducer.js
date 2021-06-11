@@ -3,13 +3,13 @@ import { shuffle } from './speakersAction'
 export const DEFAULT_STATE = {
     questions: {
         0: {
-            name: "Activity ou Fragment",
-            voteOpen: false
+            name: 'Activity ou Fragment',
+            voteOpen: false,
         },
         1: {
-            name: "Votre meilleur souvenir",
-            voteOpen: false
-        }
+            name: 'Votre meilleur souvenir',
+            voteOpen: false,
+        },
     },
     speakers: null,
     activeQuestion: null,
@@ -20,59 +20,58 @@ export const DEFAULT_STATE = {
     gameId: null,
 }
 
-
 export const appReducer = (state, { type, payload }) => {
     console.log(`Action: ${type}`, payload)
     switch (type) {
-        case "questionsLoaded":
+        case 'questionsLoaded':
             return {
                 ...state,
                 questions: payload,
-                questionsLoaded: true
+                questionsLoaded: true,
             }
-        case "speakersLoaded":
+        case 'speakersLoaded':
             return {
                 ...state,
                 speakers: payload,
                 speakersLoaded: true,
                 speakersOrder: shuffle(Object.keys(payload)),
-                speakersOrderCurrentIndex: 0
+                speakersOrderCurrentIndex: 0,
             }
-        case "speakersOrderShuffled":
+        case 'speakersOrderShuffled':
             return {
                 ...state,
                 speakersOrder: payload,
-                speakersOrderCurrentIndex: 0
+                speakersOrderCurrentIndex: 0,
             }
-        case "nextSpeaker":
+        case 'nextSpeaker':
             return {
                 ...state,
-                speakersOrderCurrentIndex: state.speakersOrderCurrentIndex +1
+                speakersOrderCurrentIndex: state.speakersOrderCurrentIndex + 1,
             }
-        case "prevSpeaker":
+        case 'prevSpeaker':
             return {
                 ...state,
-                speakersOrderCurrentIndex: state.speakersOrderCurrentIndex -1
+                speakersOrderCurrentIndex: state.speakersOrderCurrentIndex - 1,
             }
-        case "activeQuestionChanged":
+        case 'activeQuestionChanged':
             return {
                 ...state,
-                activeQuestion: payload
+                activeQuestion: payload,
             }
-        case "questionUpdated":
+        case 'questionUpdated':
             return {
                 ...state,
                 questions: {
                     ...state.questions,
-                    [payload.questionId]: payload.data
-                }
+                    [payload.questionId]: payload.data,
+                },
             }
-        case "newGameStarted":
+        case 'newGameStarted':
             return {
                 ...state,
-                gameId : payload.data
+                gameId: payload.data,
             }
         default:
-            throw new Error();
+            throw new Error()
     }
 }

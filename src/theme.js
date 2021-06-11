@@ -5,9 +5,9 @@ export const theme = responsiveFontSizes(
         palette: {
             type: 'light',
             primary: {
-                light: "#d3f3a4",
-                main: "#99BF52",
-                dark: "#637d2d",
+                light: '#d3f3a4',
+                main: '#99BF52',
+                dark: '#637d2d',
                 contrastText: '#fff',
                 inputLabel: '#99BF52',
             },
@@ -22,7 +22,7 @@ export const theme = responsiveFontSizes(
             players: {
                 player1: '#6ec6ff',
                 player2: '#FFA000',
-                player3: '#E57373'
+                player3: '#E57373',
             },
         },
         typography: {

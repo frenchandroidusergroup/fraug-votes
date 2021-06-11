@@ -1,9 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Box, Button, Container, Typography } from '@material-ui/core'
-import {
-    Link,
-    useParams
-} from "react-router-dom"
+import { Link, useParams } from 'react-router-dom'
 import useCountDown from 'react-countdown-hook'
 import { Countdown } from '../components/Countdown'
 import { DispatchContext, StateContext } from '../AppContext'
@@ -16,7 +13,7 @@ export const CounterScreen = () => {
     const [countdownStatus, setCountdownStatus] = useState({
         isRunning: false,
         isPaused: false,
-        isFinished: false
+        isFinished: false,
     })
     const { speakerId } = useParams()
 
@@ -26,21 +23,21 @@ export const CounterScreen = () => {
             setCountdownStatus({
                 ...countdownStatus,
                 isRunning: false,
-                isPaused: true
+                isPaused: true,
             })
-        }else if (countdownStatus.isPaused) {
+        } else if (countdownStatus.isPaused) {
             resume()
             setCountdownStatus({
                 ...countdownStatus,
                 isRunning: true,
-                isPaused: false
+                isPaused: false,
             })
         } else {
             start()
             setCountdownStatus({
                 ...countdownStatus,
                 isRunning: true,
-                isPaused: false
+                isPaused: false,
             })
         }
     }
@@ -51,7 +48,7 @@ export const CounterScreen = () => {
             ...countdownStatus,
             isRunning: true,
             isFinished: false,
-            isPaused: false
+            isPaused: false,
         })
     }
 
@@ -59,36 +56,46 @@ export const CounterScreen = () => {
         start() // auto start on component mount
     }, [start])
 
-    const prevSpeakerId = state.speakersOrder[state.speakersOrderCurrentIndex -1]
-    const nextSpeakerId = state.speakersOrder[state.speakersOrderCurrentIndex +1]
+    const prevSpeakerId =
+        state.speakersOrder[state.speakersOrderCurrentIndex - 1]
+    const nextSpeakerId =
+        state.speakersOrder[state.speakersOrderCurrentIndex + 1]
 
-    return <Container maxWidth="sm" style={{ textAlign: "center" }}>
-        <Typography variant="h1">{speakerId}</Typography>
+    return (
+        <Container maxWidth="sm" style={{ textAlign: 'center' }}>
+            <Typography variant="h1">{speakerId}</Typography>
 
-        <Countdown value={timeLeft / 1000} size={400} fontSize={150}/>
+            <Countdown value={timeLeft / 1000} size={400} fontSize={150} />
 
-        <Box display="flex" flexDirection="row">
+            <Box display="flex" flexDirection="row">
+                {prevSpeakerId && (
+                    <Button
+                        component={Link}
+                        onClick={() => prevSpeakerAction(dispatch)}
+                        to={`/counter/${prevSpeakerId}`}>
+                        Prev ({state.speakers[prevSpeakerId].name})
+                    </Button>
+                )}
 
-            {prevSpeakerId && <Button
-                component={Link}
-                onClick={() => prevSpeakerAction(dispatch)}
-                to={`/counter/${prevSpeakerId}`}>
-                Prev ({state.speakers[prevSpeakerId].name})
-            </Button>}
+                {nextSpeakerId && (
+                    <Button
+                        component={Link}
+                        onClick={() => nextSpeakerAction(dispatch)}
+                        to={`/counter/${nextSpeakerId}`}>
+                        Next ({state.speakers[nextSpeakerId].name})
+                    </Button>
+                )}
+            </Box>
 
-            {nextSpeakerId && <Button
-                component={Link}
-                onClick={() => nextSpeakerAction(dispatch)}
-                to={`/counter/${nextSpeakerId}`}>
-                Next ({state.speakers[nextSpeakerId].name})
-            </Button>}
-        </Box>
-
-        <Box display="flex" flexDirection="row">
-            <Button onClick={startStop}>Start/pause</Button>
-            <Button onClick={restart}>Restart</Button>
-            {!nextSpeakerId && <Button component={Link} to="/votes">Votes</Button>}
-        </Box>
-    </Container>
-
+            <Box display="flex" flexDirection="row">
+                <Button onClick={startStop}>Start/pause</Button>
+                <Button onClick={restart}>Restart</Button>
+                {!nextSpeakerId && (
+                    <Button component={Link} to="/votes">
+                        Votes
+                    </Button>
+                )}
+            </Box>
+        </Container>
+    )
 }

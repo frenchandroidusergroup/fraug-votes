@@ -1,22 +1,21 @@
 export const nextSpeakerAction = (dispatch) => {
     dispatch({
-        type: "nextSpeaker",
+        type: 'nextSpeaker',
     })
 }
 export const prevSpeakerAction = (dispatch) => {
     dispatch({
-        type: "prevSpeaker",
+        type: 'prevSpeaker',
     })
 }
 export const shuffleSpeakersAction = (state, dispatch) => {
-    const speakerIds =Object.keys(state.speakers)
+    const speakerIds = Object.keys(state.speakers)
 
     dispatch({
-        type: "speakersOrderShuffled",
-        payload: shuffle(speakerIds)
+        type: 'speakersOrderShuffled',
+        payload: shuffle(speakerIds),
     })
 }
-
 
 /**
  * From https://stackoverflow.com/a/6274381/1377145
@@ -26,8 +25,8 @@ export const shuffleSpeakersAction = (state, dispatch) => {
  */
 export function shuffle(a) {
     for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
+        const j = Math.floor(Math.random() * (i + 1))
+        ;[a[i], a[j]] = [a[j], a[i]]
     }
-    return a;
+    return a
 }

@@ -1,5 +1,14 @@
-import { initializeApp, getApps } from "firebase/app"
-import { getFirestore, collection, getDocs,  doc, onSnapshot, addDoc, serverTimestamp, updateDoc } from "firebase/firestore"
+import { initializeApp, getApps } from 'firebase/app'
+import {
+    getFirestore,
+    collection,
+    getDocs,
+    doc,
+    onSnapshot,
+    addDoc,
+    serverTimestamp,
+    updateDoc,
+} from 'firebase/firestore'
 
 if (!getApps().length) {
     initializeApp({
@@ -13,31 +22,31 @@ if (!getApps().length) {
 const db = getFirestore()
 
 export const loadSpeakers = async (dispatch) => {
-    const querySnapshot = await getDocs(collection(db, "settings"));
+    const querySnapshot = await getDocs(collection(db, 'settings'))
     querySnapshot.forEach((doc) => {
-        if(doc.id === "admin") {
+        if (doc.id === 'admin') {
             const data = doc.data()
             dispatch({
-                type: "speakersLoaded",
-                payload: data.speakers
+                type: 'speakersLoaded',
+                payload: data.speakers,
             })
             dispatch({
-                type: "activeQuestionChanged",
-                payload: data.activeQuestion
+                type: 'activeQuestionChanged',
+                payload: data.activeQuestion,
             })
         }
     })
 }
 
-export const loadQuestions = async(dispatch) => {
-    const querySnapshot = await getDocs(collection(db, "question"))
+export const loadQuestions = async (dispatch) => {
+    const querySnapshot = await getDocs(collection(db, 'question'))
     const questions = {}
     querySnapshot.forEach((doc) => {
         questions[doc.id] = doc.data()
     })
     dispatch({
-        type: "questionsLoaded",
-        payload: questions
+        type: 'questionsLoaded',
+        payload: questions,
     })
 }
 
@@ -47,42 +56,44 @@ export const changeActiveQuestion = async () => {
 
 export const listenToQuestion = async (dispatch, questionId) => {
     console.log(`Listen to question "${questionId}"`)
-    return  onSnapshot(doc(db, "question", questionId), (docObject) => {
-        console.log("Current data: ", docObject.data());
+    return onSnapshot(doc(db, 'question', questionId), (docObject) => {
+        console.log('Current data: ', docObject.data())
         dispatch({
-            type: "questionUpdated",
+            type: 'questionUpdated',
             payload: {
                 questionId,
-                data: docObject.data()
-            }
+                data: docObject.data(),
+            },
         })
     })
 }
 
 export const createNewGame = async (dispatch, speakers) => {
-    const gameReference =  await addDoc(collection(db, "games"), {
+    const gameReference = await addDoc(collection(db, 'games'), {
         currentQuestion: 0,
         speakers,
-        startDate: serverTimestamp()
-    });
+        startDate: serverTimestamp(),
+    })
     const gameId = gameReference.id
     await createNewQuestion(dispatch, gameId)
     dispatch({
-        type: "questionUpdated",
-        payload: gameId
+        type: 'questionUpdated',
+        payload: gameId,
     })
     return gameId
 }
 
-
 export const createNewQuestion = async (dispatch, gameId) => {
-    const questionRef = await addDoc(collection(doc(collection(db, "games"), gameId ), "questions"), {
-            voteOpened: true
-        })
+    const questionRef = await addDoc(
+        collection(doc(collection(db, 'games'), gameId), 'questions'),
+        {
+            voteOpened: true,
+        }
+    )
 
     //update currentQuestion with new questionId
-    const questionsCollectionRef = doc(collection(db, "games"), gameId )
+    const questionsCollectionRef = doc(collection(db, 'games'), gameId)
     await updateDoc(questionsCollectionRef, {
-        currentQuestion: questionRef.id
+        currentQuestion: questionRef.id,
     })
 }
