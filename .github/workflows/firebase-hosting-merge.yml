@@ -12,6 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: npm ci && npm run build
+        env:
+            REACT_APP_APPID: '${{ secrets.REACT_APP_APPID }}'
+            REACT_APP_API_KEY: '${{ secrets.REACT_APP_API_KEY }}'
+            REACT_APP_PROJECT_ID: '${{ secrets.REACT_APP_PROJECT_ID }}'
+            REACT_APP_AUTH_DOMAIN: '${{ secrets.REACT_APP_AUTH_DOMAIN }}'
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
