@@ -65,7 +65,7 @@ export const CounterScreen = () => {
     return <Container maxWidth="sm" style={{ textAlign: "center" }}>
         <Typography variant="h1">{speakerId}</Typography>
 
-        <Countdown value={timeLeft / 1000}/>
+        <Countdown value={timeLeft / 1000} size={400} fontSize={150}/>
 
         <Box display="flex" flexDirection="row">
 

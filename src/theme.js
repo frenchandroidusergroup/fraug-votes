@@ -19,6 +19,11 @@ export const theme = responsiveFontSizes(
                 buttonSecondaryBackground: '#fff',
                 buttonSecondaryText: '#111',
             },
+            players: {
+                player1: '#6ec6ff',
+                player2: '#FFA000',
+                player3: '#E57373'
+            },
         },
         typography: {
             h2: {

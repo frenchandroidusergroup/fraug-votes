@@ -80,7 +80,7 @@ export const createNewQuestion = async (dispatch, gameId) => {
 
     //update currentQuestion with new questionId
     const questionsCollectionRef = doc(collection(db, "games"), gameId )
-    const updateCurrentQuestionId = await updateDoc(questionsCollectionRef, {
+    await updateDoc(questionsCollectionRef, {
         currentQuestion: questionRef.id
     })
 }
