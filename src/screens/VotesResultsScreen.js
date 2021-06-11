@@ -27,10 +27,6 @@ export const VotesResultsScreen = () => {
     const history = useHistory()
     const [results, setResults] = useState(null)
     const [timeLeft, { start }] = useCountDown(10000)
-    const [countdownStatus, setCountdownStatus] = useState({
-        isRunning: false,
-        isFinished: false,
-    })
 
     useEffect(() => {
         return listenToVotes(
@@ -61,26 +57,7 @@ export const VotesResultsScreen = () => {
 
     useEffect(() => {
         start()
-        setCountdownStatus({
-            isRunning: true,
-            isFinished: false,
-        })
     }, [start])
-
-    useEffect(() => {
-        if (timeLeft === 0 && countdownStatus.isRunning) {
-            toggleVotesOpen(state.gameId, state.activeQuestion, false)
-            setCountdownStatus({
-                isRunning: false,
-                isFinished: true,
-            })
-        }
-    }, [
-        timeLeft,
-        countdownStatus.isRunning,
-        state.gameId,
-        state.activeQuestion,
-    ])
 
     const nextSpeakerId = state.speakersOrder[state.speakersOrderCurrentIndex]
     const nextSpeaker = state.speakers[nextSpeakerId].name
@@ -134,7 +111,12 @@ export const VotesResultsScreen = () => {
                 }}>
                 Question suivante ({nextSpeaker} commence)
             </Button>
-            <Button component={Link} to="/scores">
+            <Button
+                component={Link}
+                to="/scores"
+                onClick={() => {
+                    toggleVotesOpen(state.gameId, state.activeQuestion, false)
+                }}>
                 Scores
             </Button>
         </Container>

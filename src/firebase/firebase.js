@@ -147,14 +147,8 @@ export const listenToVotes = async (
     console.log(`- Listen to votes "${questionId}"`)
     return onSnapshot(
         collection(db, `games/${gameId}/questions/${questionId}/votes`),
-        (docObject) => {
-            const results = {}
-            docObject.forEach((doc) => {
-                const data = doc.data()
-                if (results[data.choiceId]) {
-                    results[data.choiceId]++
-                } else results[data.choiceId] = 1
-            })
+        (docsObjects) => {
+            const results = aggregateVotes(docsObjects)
             onResultsUpdated(results)
         }
     )
@@ -168,4 +162,64 @@ export const toggleVotesOpen = async (gameId, questionId, shouldBeOpen) => {
     await updateDoc(questionsCollectionRef, {
         voteOpened: shouldBeOpen,
     })
+}
+
+export const aggregatesFinalScores = async (speakers, gameId) => {
+    const questionsIds = []
+    const questionsSnapshots = await getDocs(
+        collection(db, `games/${gameId}/questions`)
+    )
+
+    questionsSnapshots.forEach((doc) => {
+        questionsIds.push(doc.id)
+    })
+
+    const results = Object.keys(speakers).reduce((acc, speakerId) => {
+        acc[speakerId] = 0
+        return acc
+    }, {})
+
+    for (const questionId of questionsIds) {
+        const votesSnapshots = await getDocs(
+            collection(db, `games/${gameId}/questions/${questionId}/votes`)
+        )
+        const votesResults = aggregateVotes(votesSnapshots)
+        if (!Object.keys(votesResults).length) {
+            continue
+        }
+        // TODO : gérer l'égalité pour mettre un point au execo premier
+        results[Object.keys(votesResults)[0]]++
+    }
+
+    return Object.keys(results)
+        .sort((a, b) => {
+            return results[b] - results[a]
+        })
+        .map((speakerId) => {
+            return {
+                name: speakers[speakerId].name,
+                id: speakerId,
+                score: results[speakerId],
+            }
+        })
+}
+
+const aggregateVotes = (votesSnapshots) => {
+    const results = {}
+    votesSnapshots.forEach((doc) => {
+        const data = doc.data()
+        if (results[data.choiceId]) {
+            results[data.choiceId]++
+        } else results[data.choiceId] = 1
+    })
+    Object.keys(results)
+        .sort((a, b) => {
+            return results[b] - results[a]
+        })
+        .reduce((acc, speakerId) => {
+            acc[speakerId] = results[speakerId]
+            return acc
+        }, {})
+
+    return results
 }

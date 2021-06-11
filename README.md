@@ -8,8 +8,9 @@ Simple realtime client app to display ongoing votes for a meetups/live questions
 -   [x] login for admin access + firestore rules
 -   [x] display speakers name/hashbang
 -   [x] display votes
--   [ ] display final results
+-   [x] display final results
 -   [x] toggle vote on/off
+-   [ ] finir les TODOS dans le code
 -   [ ] add sound on countdown finished
 
 ## Setup
