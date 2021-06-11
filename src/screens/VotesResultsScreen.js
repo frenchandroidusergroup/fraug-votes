@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {
     Box,
     Button,
@@ -10,20 +10,38 @@ import {
 import { Link } from 'react-router-dom'
 import { Countdown } from '../components/Countdown'
 import { Chart } from 'react-google-charts'
-import { aggregateQuestionVotes } from '../firebase/firebase'
-import { StateContext } from '../AppContext'
+import { listenToVotes } from '../firebase/firebase'
+import { DispatchContext, StateContext } from '../AppContext'
+import { formatVotesResultsForGraph } from '../utils/formatVotesResultsForGraph'
 
 export const VotesResultsScreen = () => {
     const theme = useTheme()
+    const dispatch = useContext(DispatchContext)
     const state = useContext(StateContext)
+    const [results, setResults] = useState(null)
 
     useEffect(() => {
-        const run = async () => {
-            await aggregateQuestionVotes(state.gameId, state.activeQuestion)
-        }
-        // noinspection JSIgnoredPromiseFromCall
-        run()
-    }, [state.gameId, state.activeQuestion])
+        return listenToVotes(
+            dispatch,
+            state.gameId,
+            state.activeQuestion,
+            (results) => {
+                setResults(
+                    formatVotesResultsForGraph(
+                        results,
+                        state.speakers,
+                        theme.palette.players
+                    )
+                )
+            }
+        )
+    }, [
+        dispatch,
+        state.gameId,
+        state.activeQuestion,
+        state.speakers,
+        theme.palette.players,
+    ])
 
     return (
         <Container maxWidth="md">
@@ -36,36 +54,29 @@ export const VotesResultsScreen = () => {
                         <Countdown value={30} size={80} fontSize={30} />
                     </Box>
                 </Grid>
-                <Grid>
+                <Grid item sm={12}>
                     <Chart
                         chartType="BarChart"
                         loader={<div>Loading Votes</div>}
-                        data={[
-                            [
-                                'Player',
-                                'Votes',
-                                { role: 'style' },
-                                {
-                                    sourceColumn: 0,
-                                    role: 'annotation',
-                                    type: 'string',
-                                    calc: 'stringify',
-                                },
-                            ],
-                            ['Marion', 12, theme.palette.players.player1, null],
-                            [
-                                'Benjamin',
-                                10,
-                                theme.palette.players.player2,
-                                null,
-                            ],
-                            ['Cyril', 19, theme.palette.players.player3, null],
-                        ]}
+                        data={results}
                         options={{
-                            bar: { groupWidth: '95%' },
+                            animation: {
+                                duration: 1000,
+                                easing: 'inAndOut',
+                                startup: true,
+                            },
+                            height: 400,
+                            backgroundColor: 'transparent',
+                            bar: { groupWidth: '90%' },
                             legend: { position: 'none' },
+                            hAxis: {
+                                textStyle: { fontSize: 30 },
+                                baselineColor: 'transparent',
+                            },
+                            vAxis: { textStyle: { fontSize: 30 } },
                         }}
                     />
+                    <br />
                 </Grid>
             </Grid>
 

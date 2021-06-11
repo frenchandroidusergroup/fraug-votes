@@ -84,7 +84,7 @@ export const loadQuestions = async (dispatch, gameId) => {
 }
 
 export const listenToQuestion = async (dispatch, gameId, questionId) => {
-    console.log(`Listen to question "${questionId}"`)
+    console.log(`- Listen to question "${questionId}"`)
     return onSnapshot(
         doc(db, `games/${gameId}/questions`, questionId),
         (docObject) => {
@@ -112,6 +112,7 @@ export const createNewGame = async (dispatch, speakers) => {
         type: 'gameLoaded',
         payload: gameId,
     })
+    // TODO: set currentGame to settings/admin
     return gameId
 }
 
@@ -134,6 +135,24 @@ export const changeActiveQuestion = async () => {
     console.log('TODO')
 }
 
-export const aggregateQuestionVotes = async (gameId, questionId) => {
-    console.log(gameId, questionId)
+export const listenToVotes = async (
+    dispatch,
+    gameId,
+    questionId,
+    onResultsUpdated
+) => {
+    console.log(`- Listen to votes "${questionId}"`)
+    return onSnapshot(
+        collection(db, `games/${gameId}/questions/${questionId}/votes`),
+        (docObject) => {
+            const results = {}
+            docObject.forEach((doc) => {
+                const data = doc.data()
+                if (results[data.choiceId]) {
+                    results[data.choiceId]++
+                } else results[data.choiceId] = 1
+            })
+            onResultsUpdated(results)
+        }
+    )
 }
