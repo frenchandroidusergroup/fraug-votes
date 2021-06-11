@@ -88,7 +88,6 @@ export const listenToQuestion = async (dispatch, gameId, questionId) => {
     return onSnapshot(
         doc(db, `games/${gameId}/questions`, questionId),
         (docObject) => {
-            console.log('Current data: ', docObject.data())
             dispatch({
                 type: 'questionUpdated',
                 payload: {
@@ -155,4 +154,14 @@ export const listenToVotes = async (
             onResultsUpdated(results)
         }
     )
+}
+
+export const toggleVotesOpen = async (gameId, questionId, shouldBeOpen) => {
+    const questionsCollectionRef = doc(
+        collection(db, `games/${gameId}/questions`),
+        questionId
+    )
+    await updateDoc(questionsCollectionRef, {
+        voteOpened: shouldBeOpen,
+    })
 }
