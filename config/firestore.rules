@@ -1,8 +1,13 @@
 rules_version = '2';
 service cloud.firestore {
-  match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if true;
+    match /databases/{database}/documents {
+        match /{document=**} {
+
+            function authenticated() { return request.auth.uid != null; }
+            function getSettings() { return get(/databases/$(database)/documents/settings/admin).data; }
+            function isAnAdmin(settings) { return request.auth.email in settings.adminEmails; }
+
+            allow read, write: if authenticated() && isAnAdmin(getSettings());
+        }
     }
-  }
 }

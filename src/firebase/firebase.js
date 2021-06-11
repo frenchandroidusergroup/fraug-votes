@@ -9,7 +9,7 @@ import {
     serverTimestamp,
     updateDoc,
 } from 'firebase/firestore'
-import { getAuth, GoogleAuthProvider } from 'firebase/auth'
+import { getAuth, GoogleAuthProvider, signOut } from 'firebase/auth'
 
 if (!getApps().length) {
     initializeApp({
@@ -25,20 +25,32 @@ export const auth = getAuth()
 export const authProvider = new GoogleAuthProvider()
 
 export const loadSpeakers = async (dispatch) => {
-    const querySnapshot = await getDocs(collection(db, 'settings'))
-    querySnapshot.forEach((doc) => {
-        if (doc.id === 'admin') {
-            const data = doc.data()
-            dispatch({
-                type: 'speakersLoaded',
-                payload: data.speakers,
-            })
-            dispatch({
-                type: 'activeQuestionChanged',
-                payload: data.activeQuestion,
-            })
+    try {
+        const querySnapshot = await getDocs(collection(db, 'settings'))
+
+        querySnapshot.forEach((doc) => {
+            if (doc.id === 'admin') {
+                const data = doc.data()
+                dispatch({
+                    type: 'speakersLoaded',
+                    payload: data.speakers,
+                })
+                dispatch({
+                    type: 'activeQuestionChanged',
+                    payload: data.activeQuestion,
+                })
+            }
+        })
+    } catch (error) {
+        if (error.code === 'permission-denied') {
+            alert(
+                'You need to sign in and be authorized by the service owners (settings.admin.adminEmails)'
+            )
+            signOut(auth)
+            return
         }
-    })
+        console.error(error)
+    }
 }
 
 export const loadQuestions = async (dispatch) => {
