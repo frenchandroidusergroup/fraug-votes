@@ -7,18 +7,24 @@ import {
     Typography,
     useTheme,
 } from '@material-ui/core'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { Countdown } from '../components/Countdown'
 import { Chart } from 'react-google-charts'
-import { listenToVotes, toggleVotesOpen } from '../firebase/firebase'
+import {
+    createNewQuestion,
+    listenToVotes,
+    toggleVotesOpen,
+} from '../firebase/firebase'
 import { DispatchContext, StateContext } from '../AppContext'
 import { formatVotesResultsForGraph } from '../utils/formatVotesResultsForGraph'
 import useCountDown from 'react-countdown-hook'
+import { shuffleSpeakersAction } from '../state/speakersAction'
 
 export const VotesResultsScreen = () => {
     const theme = useTheme()
     const dispatch = useContext(DispatchContext)
     const state = useContext(StateContext)
+    const history = useHistory()
     const [results, setResults] = useState(null)
     const [timeLeft, { start }] = useCountDown(10000)
     const [countdownStatus, setCountdownStatus] = useState({
@@ -50,6 +56,10 @@ export const VotesResultsScreen = () => {
     ])
 
     useEffect(() => {
+        shuffleSpeakersAction(state.speakers, dispatch)
+    }, [state.speakers, dispatch])
+
+    useEffect(() => {
         start()
         setCountdownStatus({
             isRunning: true,
@@ -71,6 +81,9 @@ export const VotesResultsScreen = () => {
         state.gameId,
         state.activeQuestion,
     ])
+
+    const nextSpeakerId = state.speakersOrder[state.speakersOrderCurrentIndex]
+    const nextSpeaker = state.speakers[nextSpeakerId].name
 
     return (
         <Container maxWidth="md">
@@ -105,15 +118,22 @@ export const VotesResultsScreen = () => {
                             hAxis: {
                                 textStyle: { fontSize: 30 },
                                 baselineColor: 'transparent',
+                                minValue: 0,
                             },
-                            vAxis: { textStyle: { fontSize: 30 } },
+                            vAxis: { textStyle: { fontSize: 30 }, minValue: 0 },
                         }}
                     />
                     <br />
                 </Grid>
             </Grid>
 
-            <Button>New vote round</Button>
+            <Button
+                onClick={async () => {
+                    await createNewQuestion(dispatch, state.gameId)
+                    history.push(`/counter/${nextSpeakerId}`)
+                }}>
+                Question suivante ({nextSpeaker} commence)
+            </Button>
             <Button component={Link} to="/scores">
                 Scores
             </Button>

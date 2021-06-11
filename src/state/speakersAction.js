@@ -8,8 +8,8 @@ export const prevSpeakerAction = (dispatch) => {
         type: 'prevSpeaker',
     })
 }
-export const shuffleSpeakersAction = (state, dispatch) => {
-    const speakerIds = Object.keys(state.speakers)
+export const shuffleSpeakersAction = (speakers, dispatch) => {
+    const speakerIds = Object.keys(speakers)
 
     dispatch({
         type: 'speakersOrderShuffled',

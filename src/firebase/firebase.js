@@ -128,6 +128,10 @@ export const createNewQuestion = async (dispatch, gameId) => {
     await updateDoc(questionsCollectionRef, {
         currentQuestion: questionRef.id,
     })
+    dispatch({
+        type: 'activeQuestionChanged',
+        payload: questionRef.id,
+    })
 }
 
 export const changeActiveQuestion = async () => {
