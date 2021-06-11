@@ -26,7 +26,7 @@ export const HomeScreen = () => {
                 color="primary"
                 size="large"
                 onClick={startNewGame}>
-                C'est parti !
+                Nouvelle partie
             </Button>{' '}
             <Button
                 variant="outlined"
