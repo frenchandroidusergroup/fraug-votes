@@ -9,6 +9,7 @@ import {
     serverTimestamp,
     updateDoc,
 } from 'firebase/firestore'
+import { getAuth, GoogleAuthProvider } from 'firebase/auth'
 
 if (!getApps().length) {
     initializeApp({
@@ -20,6 +21,8 @@ if (!getApps().length) {
 }
 
 const db = getFirestore()
+export const auth = getAuth()
+export const authProvider = new GoogleAuthProvider()
 
 export const loadSpeakers = async (dispatch) => {
     const querySnapshot = await getDocs(collection(db, 'settings'))

@@ -11,6 +11,7 @@ import { AppLoader } from './AppLoader'
 import './firebase/firebase'
 import { appReducer, DEFAULT_STATE } from './state/appReducer'
 import { StateContext, DispatchContext } from './AppContext'
+import { Login } from './components/Login'
 
 export const App = () => {
     const [state, dispatch] = useReducer(appReducer, DEFAULT_STATE)
@@ -19,48 +20,50 @@ export const App = () => {
         <div>
             <CssBaseline />
             <main>
-                <DispatchContext.Provider value={dispatch}>
-                    <StateContext.Provider value={state}>
-                        <QuestionsListener />
-                        <ThemeProvider theme={theme}>
-                            <AppLoader>
-                                <Router>
-                                    <Switch>
-                                        <Route
-                                            exact
-                                            path="/"
-                                            component={HomeScreen}
-                                        />
-                                        <Route
-                                            path="/counter/:speakerId"
-                                            render={(props) => (
-                                                <CounterScreen
-                                                    key={
-                                                        props.match.params
-                                                            .speakerId
-                                                    }
-                                                />
-                                            )}
-                                        />
-                                        <Route
-                                            path="/votes"
-                                            component={VotesResultsScreen}
-                                        />
-                                        <Route
-                                            path="/scores"
-                                            component={FinalScoreScreen}
-                                        />
+                <ThemeProvider theme={theme}>
+                    <Login>
+                        <DispatchContext.Provider value={dispatch}>
+                            <StateContext.Provider value={state}>
+                                <QuestionsListener />
+                                <AppLoader>
+                                    <Router>
+                                        <Switch>
+                                            <Route
+                                                exact
+                                                path="/"
+                                                component={HomeScreen}
+                                            />
+                                            <Route
+                                                path="/counter/:speakerId"
+                                                render={(props) => (
+                                                    <CounterScreen
+                                                        key={
+                                                            props.match.params
+                                                                .speakerId
+                                                        }
+                                                    />
+                                                )}
+                                            />
+                                            <Route
+                                                path="/votes"
+                                                component={VotesResultsScreen}
+                                            />
+                                            <Route
+                                                path="/scores"
+                                                component={FinalScoreScreen}
+                                            />
 
-                                        <Route
-                                            component={HomeScreen}
-                                            status={404}
-                                        />
-                                    </Switch>
-                                </Router>
-                            </AppLoader>
-                        </ThemeProvider>
-                    </StateContext.Provider>
-                </DispatchContext.Provider>
+                                            <Route
+                                                component={HomeScreen}
+                                                status={404}
+                                            />
+                                        </Switch>
+                                    </Router>
+                                </AppLoader>
+                            </StateContext.Provider>
+                        </DispatchContext.Provider>
+                    </Login>
+                </ThemeProvider>
             </main>
         </div>
     )
