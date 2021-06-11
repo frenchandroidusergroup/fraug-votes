@@ -187,8 +187,24 @@ export const aggregatesFinalScores = async (speakers, gameId) => {
         if (!Object.keys(votesResults).length) {
             continue
         }
-        // TODO : gérer l'égalité pour mettre un point au execo premier
-        results[Object.keys(votesResults)[0]]++
+        const mapByScores = Object.keys(votesResults).reduce(
+            (acc, speakerId) => {
+                if (!acc[votesResults[speakerId]]) {
+                    acc[votesResults[speakerId]] = []
+                }
+                acc[votesResults[speakerId]].push(speakerId)
+                return acc
+            },
+            {}
+        )
+
+        // Get the last element in the array
+        Object.values(mapByScores)[Object.keys(mapByScores).length - 1].forEach(
+            (speakerId) => {
+                console.log('winner', speakerId)
+                results[speakerId]++
+            }
+        )
     }
 
     return Object.keys(results)
