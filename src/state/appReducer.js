@@ -17,6 +17,7 @@ export const DEFAULT_STATE = {
     speakersLoaded: false,
     speakersOrder: [],
     speakersOrderCurrentIndex: 0,
+    gameId: null,
 }
 
 
@@ -65,6 +66,11 @@ export const appReducer = (state, { type, payload }) => {
                     ...state.questions,
                     [payload.questionId]: payload.data
                 }
+            }
+        case "newGameStarted":
+            return {
+                ...state,
+                gameId : payload.data
             }
         default:
             throw new Error();
