@@ -12,6 +12,12 @@ Simple realtime client app to display ongoing votes for a meetups/live questions
 - [ ] toggle vote on/off
 - [ ] add sound on countdown finished
 
+## Setup
+
+1. Copy `.env.example` to `.env` and complete it with your firebase credentials.
+2. Run `npm install` to install the app dependencies.
+3. Run `npm start` to start the local build server.
+
 ## Available Scripts
 
 ### `npm start`
