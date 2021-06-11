@@ -9,15 +9,13 @@ export const HomeScreen = () => {
     const dispatch = useContext(DispatchContext);
     const history = useHistory();
 
-
     const firstSpeakerId = state.speakersOrder[state.speakersOrderCurrentIndex]
     const firstSpeaker = state.speakers[firstSpeakerId].name
 
     const startNewGame = async () => {
-        await createNewGame(dispatch)
+        await createNewGame(dispatch, state.speakers)
         history.push(`/counter/${firstSpeakerId}`)
     }
-
 
     return <Container maxWidth="md">
         <Typography variant='h1'>Question pour des grenouilles</Typography>

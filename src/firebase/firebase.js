@@ -59,9 +59,10 @@ export const listenToQuestion = async (dispatch, questionId) => {
     })
 }
 
-export const createNewGame = async (dispatch) => {
+export const createNewGame = async (dispatch, speakers) => {
     const gameReference =  await addDoc(collection(db, "games"), {
         currentQuestion: 0,
+        speakers,
         startDate: serverTimestamp()
     });
     const gameId = gameReference.id
@@ -70,6 +71,7 @@ export const createNewGame = async (dispatch) => {
         type: "questionUpdated",
         payload: gameId
     })
+    return gameId
 }
 
 
