@@ -5,7 +5,7 @@ service cloud.firestore {
 
             function authenticated() { return request.auth.uid != null; }
             function getSettings() { return get(/databases/$(database)/documents/settings/admin).data; }
-            function isAnAdmin(settings) { return request.auth.email in settings.adminEmails; }
+            function isAnAdmin(settings) { return request.auth.token.email in settings.adminEmails; }
 
             allow read, write: if authenticated() && isAnAdmin(getSettings());
         }
