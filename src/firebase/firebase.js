@@ -3,6 +3,7 @@ import {
     getFirestore,
     collection,
     getDocs,
+    getDoc,
     doc,
     onSnapshot,
     addDoc,
@@ -24,10 +25,11 @@ const db = getFirestore()
 export const auth = getAuth()
 export const authProvider = new GoogleAuthProvider()
 
-export const loadSpeakers = async (dispatch) => {
+export const loadCurrentGame = async (dispatch) => {
     try {
         const querySnapshot = await getDocs(collection(db, 'settings'))
 
+        let currentGameId
         querySnapshot.forEach((doc) => {
             if (doc.id === 'admin') {
                 const data = doc.data()
@@ -35,12 +37,26 @@ export const loadSpeakers = async (dispatch) => {
                     type: 'speakersLoaded',
                     payload: data.speakers,
                 })
-                dispatch({
-                    type: 'activeQuestionChanged',
-                    payload: data.activeQuestion,
-                })
+                currentGameId = data.currentGame
             }
         })
+        if (currentGameId) {
+            dispatch({
+                type: 'gameLoaded',
+                payload: currentGameId,
+            })
+            const gameSnapshot = await getDoc(doc(db, `games/${currentGameId}`))
+            const gameData = gameSnapshot.data()
+            dispatch({
+                type: 'activeQuestionChanged',
+                payload: gameData.currentQuestion,
+            })
+            dispatch({
+                type: 'speakersLoaded',
+                payload: gameData.speakers,
+            })
+            await loadQuestions(dispatch, currentGameId)
+        }
     } catch (error) {
         if (error.code === 'permission-denied') {
             alert(
@@ -53,8 +69,10 @@ export const loadSpeakers = async (dispatch) => {
     }
 }
 
-export const loadQuestions = async (dispatch) => {
-    const querySnapshot = await getDocs(collection(db, 'question'))
+export const loadQuestions = async (dispatch, gameId) => {
+    const querySnapshot = await getDocs(
+        collection(db, `games/${gameId}/questions`)
+    )
     const questions = {}
     querySnapshot.forEach((doc) => {
         questions[doc.id] = doc.data()
@@ -65,22 +83,21 @@ export const loadQuestions = async (dispatch) => {
     })
 }
 
-export const changeActiveQuestion = async () => {
-    console.log('TODO')
-}
-
-export const listenToQuestion = async (dispatch, questionId) => {
+export const listenToQuestion = async (dispatch, gameId, questionId) => {
     console.log(`Listen to question "${questionId}"`)
-    return onSnapshot(doc(db, 'question', questionId), (docObject) => {
-        console.log('Current data: ', docObject.data())
-        dispatch({
-            type: 'questionUpdated',
-            payload: {
-                questionId,
-                data: docObject.data(),
-            },
-        })
-    })
+    return onSnapshot(
+        doc(db, `games/${gameId}/questions`, questionId),
+        (docObject) => {
+            console.log('Current data: ', docObject.data())
+            dispatch({
+                type: 'questionUpdated',
+                payload: {
+                    questionId,
+                    data: docObject.data(),
+                },
+            })
+        }
+    )
 }
 
 export const createNewGame = async (dispatch, speakers) => {
@@ -92,7 +109,7 @@ export const createNewGame = async (dispatch, speakers) => {
     const gameId = gameReference.id
     await createNewQuestion(dispatch, gameId)
     dispatch({
-        type: 'questionUpdated',
+        type: 'gameLoaded',
         payload: gameId,
     })
     return gameId
@@ -111,4 +128,12 @@ export const createNewQuestion = async (dispatch, gameId) => {
     await updateDoc(questionsCollectionRef, {
         currentQuestion: questionRef.id,
     })
+}
+
+export const changeActiveQuestion = async () => {
+    console.log('TODO')
+}
+
+export const aggregateQuestionVotes = async (gameId, questionId) => {
+    console.log(gameId, questionId)
 }

@@ -66,10 +66,10 @@ export const appReducer = (state, { type, payload }) => {
                     [payload.questionId]: payload.data,
                 },
             }
-        case 'newGameStarted':
+        case 'gameLoaded':
             return {
                 ...state,
-                gameId: payload.data,
+                gameId: payload,
             }
         default:
             throw new Error()

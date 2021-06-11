@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import {
+    Box,
     Button,
     Container,
     Grid,
@@ -8,22 +9,32 @@ import {
 } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import { Countdown } from '../components/Countdown'
-import './VotesResultsScreen.css'
 import { Chart } from 'react-google-charts'
+import { aggregateQuestionVotes } from '../firebase/firebase'
+import { StateContext } from '../AppContext'
 
 export const VotesResultsScreen = () => {
     const theme = useTheme()
+    const state = useContext(StateContext)
+
+    useEffect(() => {
+        const run = async () => {
+            await aggregateQuestionVotes(state.gameId, state.activeQuestion)
+        }
+        // noinspection JSIgnoredPromiseFromCall
+        run()
+    }, [state.gameId, state.activeQuestion])
 
     return (
-        <Container maxWidth="sm">
+        <Container maxWidth="md">
             <Grid container>
                 <Grid item sm={8}>
                     <Typography variant="h1">Votes</Typography>
                 </Grid>
                 <Grid item sm={4}>
-                    <div className="countdown">
+                    <Box margin={2}>
                         <Countdown value={30} size={80} fontSize={30} />
-                    </div>
+                    </Box>
                 </Grid>
                 <Grid>
                     <Chart

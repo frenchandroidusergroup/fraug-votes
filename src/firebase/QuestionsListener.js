@@ -8,9 +8,13 @@ export const QuestionsListener = () => {
 
     useEffect(() => {
         if (state.activeQuestion) {
-            return listenToQuestion(dispatch, state.activeQuestion)
+            return listenToQuestion(
+                dispatch,
+                state.gameId,
+                state.activeQuestion
+            )
         }
-    }, [state.activeQuestion, dispatch])
+    }, [state.activeQuestion, state.gameId, dispatch])
 
     return null
 }
