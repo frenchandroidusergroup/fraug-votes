@@ -21,7 +21,7 @@ export const FinalScoreScreen = () => {
             setScoreBoard(scores)
         }
         run()
-    }, [state.gameId])
+    }, [state.gameId, state.speakers])
 
     return (
         <Container maxWidth="md">

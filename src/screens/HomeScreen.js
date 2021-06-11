@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { Button, Container, Typography } from '@material-ui/core'
 import { DispatchContext, StateContext } from '../AppContext'
 import { createNewGame } from '../firebase/firebase'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
 export const HomeScreen = () => {
     const state = useContext(StateContext)
@@ -20,7 +20,6 @@ export const HomeScreen = () => {
     return (
         <Container maxWidth="md">
             <Typography variant="h1">Question pour des grenouilles</Typography>
-
             <h2>{firstSpeaker} commence</h2>
             <Button
                 variant="contained"
@@ -28,6 +27,15 @@ export const HomeScreen = () => {
                 size="large"
                 onClick={startNewGame}>
                 C'est parti !
+            </Button>{' '}
+            <Button
+                variant="outlined"
+                color="primary"
+                size="large"
+                disabled={!state.gameId}
+                component={Link}
+                to={`/counter/${firstSpeakerId}`}>
+                Resume game
             </Button>
         </Container>
     )
