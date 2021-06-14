@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { Box, useTheme } from '@material-ui/core'
+import { usePrevious } from '../utils/usePrevious'
 
-export const Countdown = ({ value, size, fontSize }) => {
+export const Countdown = ({
+    value,
+    size,
+    fontSize,
+    onCountdownEnd = () => {},
+}) => {
     const theme = useTheme()
     const [bgColor, setBGColor] = useState(theme.palette.primary.main)
+    const prevValue = usePrevious(value)
 
     useEffect(() => {
         if (value === 0) {
@@ -11,7 +18,13 @@ export const Countdown = ({ value, size, fontSize }) => {
         } else if (bgColor !== theme.palette.primary.main) {
             setBGColor(theme.palette.primary.main)
         }
-    }, [value])
+    }, [value, onCountdownEnd, bgColor, theme.palette.primary.main])
+
+    useEffect(() => {
+        if (prevValue === 1 && value === 0) {
+            onCountdownEnd()
+        }
+    }, [prevValue, value, onCountdownEnd])
 
     return (
         <Box

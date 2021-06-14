@@ -5,6 +5,7 @@ import useCountDown from 'react-countdown-hook'
 import { Countdown } from '../components/Countdown'
 import { DispatchContext, StateContext } from '../AppContext'
 import { nextSpeakerAction, prevSpeakerAction } from '../state/speakersAction'
+import { playWizzSound } from '../utils/playWizzSound'
 
 export const CounterScreen = () => {
     const state = useContext(StateContext)
@@ -65,7 +66,14 @@ export const CounterScreen = () => {
         <Container maxWidth="sm" style={{ textAlign: 'center' }}>
             <Typography variant="h1">{speakerId}</Typography>
 
-            <Countdown value={timeLeft / 1000} size={400} fontSize={150} />
+            <Countdown
+                value={timeLeft / 1000}
+                size={400}
+                fontSize={150}
+                onCountdownEnd={() => {
+                    playWizzSound()
+                }}
+            />
 
             <Box display="flex" flexDirection="row">
                 {prevSpeakerId && (

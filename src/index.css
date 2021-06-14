@@ -1,0 +1,53 @@
+@keyframes shake {
+    0% {
+        transform: translate(40px, 10px) rotate(0deg);
+        border-color: #d21111;
+    }
+    10% {
+        transform: translate(-30px, -20px) rotate(-1deg);
+        border-color: #aa8b24;
+    }
+    20% {
+        transform: translate(-0px, 0px) rotate(1deg);
+        border-color: #02befa;
+    }
+    30% {
+        transform: translate(10px, 10px) rotate(0deg);
+        border-color: #9f10dc;
+    }
+    40% {
+        transform: translate(-20px, -5px) rotate(1deg);
+        border-color: #65ff03;
+    }
+    50% {
+        transform: translate(70px, 10px) rotate(-2deg);
+        border-color: #ff4e00;
+    }
+    60% {
+        transform: translate(-40px, -5px) rotate(0deg);
+        border-color: #450000;
+    }
+    70% {
+        transform: translate(20px, 15px) rotate(-2deg);
+        border-color: #45b413;
+    }
+    80% {
+        transform: translate(-25px, -15px) rotate(1deg);
+        border-color: #c71313;
+    }
+    90% {
+        transform: translate(20px, 10px) rotate(0deg);
+        border-color: #0032e3;
+    }
+    100% {
+        transform: translate(40px, -8px) rotate(-1deg);
+        border-color: #ff0092;
+    }
+}
+.shake {
+    border: 20px solid transparent;
+    animation-name: shake;
+    animation-duration: 1.2s;
+    transform-origin: 50% 50%;
+    animation-iteration-count: 2;
+}
