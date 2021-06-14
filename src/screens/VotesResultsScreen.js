@@ -26,7 +26,7 @@ export const VotesResultsScreen = () => {
     const state = useContext(StateContext)
     const history = useHistory()
     const [results, setResults] = useState(null)
-    const [timeLeft, { start }] = useCountDown(10000)
+    const [timeLeft, { start }] = useCountDown(30000)
 
     useEffect(() => {
         return listenToVotes(

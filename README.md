@@ -12,8 +12,7 @@ Simple realtime client app to display ongoing votes for a meetups/live questions
 -   [x] toggle vote on/off
 -   [ ] finir les TODOS dans le code
 -   [ ] add sound on countdown finished
--   [ ] change the color of the circle to red on countdown finished
-
+-   [x] change the color of the circle to red on countdown finished
 
 ## Setup
 
