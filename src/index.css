@@ -51,3 +51,7 @@
     transform-origin: 50% 50%;
     animation-iteration-count: 2;
 }
+
+.MuiButton-text {
+    min-width: 100px !important;
+}

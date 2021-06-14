@@ -76,23 +76,24 @@ export const CounterScreen = () => {
             />
 
             <Box display="flex" flexDirection="row">
-                {prevSpeakerId && (
-                    <Button
-                        component={Link}
-                        onClick={() => prevSpeakerAction(dispatch)}
-                        to={`/counter/${prevSpeakerId}`}>
-                        Prev ({state.speakers[prevSpeakerId].name})
-                    </Button>
-                )}
+                <Button
+                    component={Link}
+                    disabled={!prevSpeakerId}
+                    onClick={() => prevSpeakerAction(dispatch)}
+                    to={`/counter/${prevSpeakerId}`}>
+                    Prev{' '}
+                    {prevSpeakerId
+                        ? `(${state.speakers[prevSpeakerId].name})`
+                        : ''}
+                </Button>
 
-                {nextSpeakerId && (
-                    <Button
-                        component={Link}
-                        onClick={() => nextSpeakerAction(dispatch)}
-                        to={`/counter/${nextSpeakerId}`}>
-                        Next ({state.speakers[nextSpeakerId].name})
-                    </Button>
-                )}
+                <Button
+                    component={Link}
+                    disabled={!nextSpeakerId}
+                    onClick={() => nextSpeakerAction(dispatch)}
+                    to={`/counter/${nextSpeakerId}`}>
+                    Next ({nextSpeakerId && state.speakers[nextSpeakerId].name})
+                </Button>
             </Box>
 
             <Box display="flex" flexDirection="row">
