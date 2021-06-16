@@ -9,19 +9,25 @@ import {
 } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import { Countdown } from '../components/Countdown'
-import { Chart } from 'react-google-charts'
 import { listenToVotes, toggleVotesOpen } from '../firebase/firebase'
 import { DispatchContext, StateContext } from '../AppContext'
-import { formatVotesResultsForGraph } from '../utils/formatVotesResultsForGraph'
+import {
+    formatVotesResultsForGraph,
+    generateAxisValues,
+} from '../utils/formatVotesResultsForGraph'
 import useCountDown from 'react-countdown-hook'
 import { shuffleSpeakersAction } from '../state/speakersAction'
 import { playWizzSound } from '../utils/playWizzSound'
+import { ResponsiveBar } from '@nivo/bar'
 
 export const VotesResultsScreen = () => {
     const theme = useTheme()
     const dispatch = useContext(DispatchContext)
     const state = useContext(StateContext)
-    const [results, setResults] = useState(null)
+    const [graphData, setGraphData] = useState({
+        data: [],
+        axisValues: [],
+    })
     const [timeLeft, { start }] = useCountDown(30000)
 
     useEffect(() => {
@@ -30,13 +36,14 @@ export const VotesResultsScreen = () => {
             state.gameId,
             state.activeQuestion,
             (results) => {
-                setResults(
-                    formatVotesResultsForGraph(
-                        results,
-                        state.speakers,
-                        theme.palette.players
-                    )
+                const formattedValues = formatVotesResultsForGraph(
+                    results,
+                    state.speakers
                 )
+                setGraphData({
+                    data: formattedValues,
+                    axisValues: generateAxisValues(formattedValues),
+                })
             }
         )
     }, [
@@ -77,30 +84,39 @@ export const VotesResultsScreen = () => {
                             </Box>
                         </Grid>
                         <Grid item sm={12}>
-                            <Chart
-                                chartType="BarChart"
-                                loader={<div>Loading Votes</div>}
-                                data={results}
-                                options={{
-                                    animation: {
-                                        duration: 1000,
-                                        easing: 'inAndOut',
-                                        startup: true,
-                                    },
-                                    height: 300,
-                                    backgroundColor: 'transparent',
-                                    bar: { groupWidth: '90%' },
-                                    legend: { position: 'none' },
-                                    hAxis: {
-                                        textStyle: { fontSize: 30 },
-                                        baselineColor: 'transparent',
-                                        minValue: 0,
-                                    },
-                                    vAxis: {
-                                        textStyle: { fontSize: 30 },
-                                        minValue: 0,
-                                    },
+                            <ResponsiveBar
+                                data={graphData.data}
+                                keys={['Votes']}
+                                indexBy="name"
+                                theme={{
+                                    fontSize: 24,
                                 }}
+                                colors={getColor(theme)}
+                                margin={{
+                                    top: 50,
+                                    right: 130,
+                                    bottom: 50,
+                                    left: 110,
+                                }}
+                                padding={0.25}
+                                minValue={0}
+                                height={400}
+                                layout="horizontal"
+                                valueScale={{ type: 'linear' }}
+                                indexScale={{ round: true }}
+                                borderRadius={10}
+                                axisTop={null}
+                                axisRight={null}
+                                axisBottom={{
+                                    tickValues: graphData.axisValues,
+                                }}
+                                axisLeft={{
+                                    tickSize: 0,
+                                    tickPadding: 15,
+                                }}
+                                enableGridY={false}
+                                enableLabel={false}
+                                animate={true}
                             />
                             <br />
                         </Grid>
@@ -122,4 +138,7 @@ export const VotesResultsScreen = () => {
             </Container>
         </Box>
     )
+}
+const getColor = (theme) => (bar) => {
+    return theme.palette.players[bar.index]
 }

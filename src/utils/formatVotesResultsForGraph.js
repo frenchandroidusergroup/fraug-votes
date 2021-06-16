@@ -1,4 +1,4 @@
-export const formatVotesResultsForGraph = (results, speakers, colors = []) => {
+export const formatVotesResultsForGraph = (results, speakers) => {
     const keys = Object.keys(results)
     const resultsWithAllSpeakers = results
     Object.keys(speakers).forEach((speakerId) => {
@@ -9,29 +9,31 @@ export const formatVotesResultsForGraph = (results, speakers, colors = []) => {
     })
 
     return [
-        [
-            'Player',
-            'Votes',
-            { role: 'style' },
-            {
-                sourceColumn: 0,
-                role: 'annotation',
-                type: 'string',
-                calc: 'stringify',
-            },
-        ],
         ...keys
             .filter((speakerId) => !!speakers[speakerId]) //only list referenced speakers
             .sort((a, b) => {
-                return resultsWithAllSpeakers[b] - resultsWithAllSpeakers[a]
+                return resultsWithAllSpeakers[a] - resultsWithAllSpeakers[b]
             })
             .map((speakerId, index) => {
-                return [
-                    speakers[speakerId] ? speakers[speakerId].name : speakerId,
-                    resultsWithAllSpeakers[speakerId],
-                    colors[index],
-                    null,
-                ]
+                return {
+                    name: speakers[speakerId]
+                        ? speakers[speakerId].name
+                        : speakerId,
+                    Votes: resultsWithAllSpeakers[speakerId]
+                        ? resultsWithAllSpeakers[speakerId]
+                        : 0,
+                }
             }),
     ]
+}
+export const generateAxisValues = (results) => {
+    if (!results || !results.length) return [0]
+    const maxValues = results[results.length - 1].Votes
+
+    const list = []
+    for (let i = 0; i <= maxValues; i++) {
+        list.push(i)
+    }
+
+    return list
 }
