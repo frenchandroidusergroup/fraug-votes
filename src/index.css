@@ -44,7 +44,7 @@
         border-color: #ff0092;
     }
 }
-.shake {
+.shake #wizz {
     border: 20px solid transparent;
     animation-name: shake;
     animation-duration: 1.2s;

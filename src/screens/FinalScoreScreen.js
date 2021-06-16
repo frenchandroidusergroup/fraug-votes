@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Button, Container, Grid, Typography } from '@material-ui/core'
+import { Box, Button, Container, Grid, Typography } from '@material-ui/core'
 import { DispatchContext, StateContext } from '../AppContext'
 import { useHistory } from 'react-router-dom'
 import { aggregatesFinalScores, createNewQuestion } from '../firebase/firebase'
@@ -24,31 +24,36 @@ export const FinalScoreScreen = () => {
     }, [state.gameId, state.speakers])
 
     return (
-        <Container maxWidth="sm">
-            <Typography variant="h1">Scores</Typography>
+        <Box alignItems="center" display="flex" minHeight="100vh">
+            <Container maxWidth="sm">
+                <Typography variant="h1">Scores</Typography>
+                <br />
+                <br />
 
-            {scoreBoard.map((line) => (
-                <Grid container key={line.name}>
-                    <Grid item sm={4}>
-                        <Typography variant="h2">{line.name}</Typography>
+                {scoreBoard.map((line) => (
+                    <Grid container key={line.name}>
+                        <Grid item sm={4}>
+                            <Typography variant="h2">{line.name}</Typography>
+                        </Grid>
+                        <Grid item sm={8}>
+                            <Typography variant="h2">{line.score}</Typography>
+                        </Grid>
                     </Grid>
-                    <Grid item sm={8}>
-                        <Typography variant="h2">{line.score}</Typography>
-                    </Grid>
-                </Grid>
-            ))}
+                ))}
 
-            <br />
-            <br />
-            <br />
+                <br />
+                <br />
+                <br />
 
-            <Button
-                onClick={async () => {
-                    await createNewQuestion(dispatch, state.gameId)
-                    history.push(`/counter/${nextSpeakerId}`)
-                }}>
-                Question suivante ({nextSpeaker} commence)
-            </Button>
-        </Container>
+                <Button
+                    style={{ fontSize: 20 }}
+                    onClick={async () => {
+                        await createNewQuestion(dispatch, state.gameId)
+                        history.push(`/counter/${nextSpeakerId}`)
+                    }}>
+                    {nextSpeaker} commence la question suivante !
+                </Button>
+            </Container>
+        </Box>
     )
 }

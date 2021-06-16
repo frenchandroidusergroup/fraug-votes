@@ -55,6 +55,7 @@ export const CounterScreen = () => {
 
     useEffect(() => {
         start() // auto start on component mount
+        document.body.style.zoom = 2.2
     }, [start])
 
     const prevSpeakerId =
@@ -64,49 +65,55 @@ export const CounterScreen = () => {
 
     return (
         <Container maxWidth="sm" style={{ textAlign: 'center' }}>
-            <Typography variant="h1">{speakerId}</Typography>
+            <div id="wizz">
+                <Typography variant="h1">{speakerId}</Typography>
 
-            <Countdown
-                value={timeLeft / 1000}
-                size={300}
-                fontSize={150}
-                onCountdownEnd={() => {
-                    playWizzSound()
-                }}
-            />
+                <Countdown
+                    value={timeLeft / 1000}
+                    size={300}
+                    fontSize={150}
+                    onCountdownEnd={() => {
+                        playWizzSound()
+                    }}
+                />
 
-            <Box display="flex" flexDirection="row" justifyContent="center">
-                <Button
-                    component={Link}
-                    style={{ fontSize: 30 }}
-                    disabled={!prevSpeakerId}
-                    onClick={() => prevSpeakerAction(dispatch)}
-                    to={`/counter/${prevSpeakerId}`}>
-                    Prev{' '}
-                    {prevSpeakerId
-                        ? `(${state.speakers[prevSpeakerId].name})`
-                        : ''}
-                </Button>
-
-                <Button
-                    style={{ fontSize: 30 }}
-                    component={Link}
-                    disabled={!nextSpeakerId}
-                    onClick={() => nextSpeakerAction(dispatch)}
-                    to={`/counter/${nextSpeakerId}`}>
-                    Next ({nextSpeakerId && state.speakers[nextSpeakerId].name})
-                </Button>
-            </Box>
-
-            <Box display="flex" flexDirection="row" justifyContent="center">
-                <Button onClick={startStop}>Start/pause</Button>
-                <Button onClick={restart}>Restart</Button>
-                {!nextSpeakerId && (
-                    <Button component={Link} to="/votes">
-                        Votes
+                <Box display="flex" flexDirection="row" justifyContent="center">
+                    <Button
+                        component={Link}
+                        style={{ fontSize: 30 }}
+                        disabled={!prevSpeakerId}
+                        onClick={() => prevSpeakerAction(dispatch)}
+                        to={`/counter/${prevSpeakerId}`}>
+                        Prev{' '}
+                        {prevSpeakerId
+                            ? `(${state.speakers[prevSpeakerId].name})`
+                            : ''}
                     </Button>
-                )}
-            </Box>
+
+                    <Button
+                        style={{ fontSize: 30 }}
+                        component={Link}
+                        disabled={!nextSpeakerId}
+                        onClick={() => nextSpeakerAction(dispatch)}
+                        to={`/counter/${nextSpeakerId}`}>
+                        Next (
+                        {nextSpeakerId && state.speakers[nextSpeakerId].name})
+                    </Button>
+                    {!nextSpeakerId && (
+                        <Button
+                            component={Link}
+                            to="/votes"
+                            style={{ fontSize: 30 }}>
+                            Votes
+                        </Button>
+                    )}
+                </Box>
+
+                <Box display="flex" flexDirection="row" justifyContent="center">
+                    <Button onClick={startStop}>Start/pause</Button>
+                    <Button onClick={restart}>Restart</Button>
+                </Box>
+            </div>
         </Container>
     )
 }

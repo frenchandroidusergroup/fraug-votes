@@ -111,7 +111,10 @@ export const createNewGame = async (dispatch, speakers) => {
         type: 'gameLoaded',
         payload: gameId,
     })
-    // TODO: set currentGame to settings/admin
+    const settingsRef = doc(collection(db, 'settings'), 'admin')
+    await updateDoc(settingsRef, {
+        currentGame: gameId,
+    })
     return gameId
 }
 
