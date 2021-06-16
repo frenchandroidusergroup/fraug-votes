@@ -10,12 +10,14 @@ import {
 import { DispatchContext, StateContext } from '../AppContext'
 import { useHistory } from 'react-router-dom'
 import { aggregatesFinalScores, createNewQuestion } from '../firebase/firebase'
+import { playApplaudSound } from '../utils/playApplaudSound'
 
 export const FinalScoreScreen = () => {
     const dispatch = useContext(DispatchContext)
     const state = useContext(StateContext)
     const history = useHistory()
     const [scoreBoard, setScoreBoard] = useState([])
+    const [isFinished, setFinished] = useState(false)
     const nextSpeakerId = state.speakersOrder[state.speakersOrderCurrentIndex]
     const nextSpeaker = state.speakers[nextSpeakerId].name
 
@@ -53,13 +55,23 @@ export const FinalScoreScreen = () => {
                 <br />
                 <br />
 
+                {!isFinished && (
+                    <Button
+                        style={{ fontSize: 20 }}
+                        onClick={async () => {
+                            await createNewQuestion(dispatch, state.gameId)
+                            history.push(`/counter/${nextSpeakerId}`)
+                        }}>
+                        {nextSpeaker} commence la question suivante !
+                    </Button>
+                )}
                 <Button
                     style={{ fontSize: 20 }}
-                    onClick={async () => {
-                        await createNewQuestion(dispatch, state.gameId)
-                        history.push(`/counter/${nextSpeakerId}`)
+                    onClick={() => {
+                        setFinished(true)
+                        playApplaudSound()
                     }}>
-                    {nextSpeaker} commence la question suivante !
+                    👏
                 </Button>
             </Container>
         </Box>
