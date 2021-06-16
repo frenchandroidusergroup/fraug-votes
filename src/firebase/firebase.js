@@ -211,6 +211,7 @@ export const aggregatesFinalScores = async (speakers, gameId) => {
     }
 
     return Object.keys(results)
+        .filter((speakerId) => !!speakers[speakerId]) //only list referenced speakers
         .sort((a, b) => {
             return results[b] - results[a]
         })

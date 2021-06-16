@@ -21,6 +21,7 @@ export const formatVotesResultsForGraph = (results, speakers, colors = []) => {
             },
         ],
         ...keys
+            .filter((speakerId) => !!speakers[speakerId]) //only list referenced speakers
             .sort((a, b) => {
                 return resultsWithAllSpeakers[b] - resultsWithAllSpeakers[a]
             })
