@@ -24,7 +24,7 @@ export const FinalScoreScreen = () => {
     }, [state.gameId, state.speakers])
 
     return (
-        <Container maxWidth="md">
+        <Container maxWidth="sm">
             <Typography variant="h1">Scores</Typography>
 
             {scoreBoard.map((line) => (

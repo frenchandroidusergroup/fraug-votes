@@ -213,7 +213,10 @@ export const aggregatesFinalScores = async (speakers, gameId) => {
         })
         .map((speakerId) => {
             return {
-                name: speakers[speakerId].name,
+                name:
+                    speakerId && speakers[speakerId]
+                        ? speakers[speakerId].name
+                        : 'undefined',
                 id: speakerId,
                 score: results[speakerId],
             }

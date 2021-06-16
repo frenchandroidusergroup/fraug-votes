@@ -19,6 +19,7 @@ import { DispatchContext, StateContext } from '../AppContext'
 import { formatVotesResultsForGraph } from '../utils/formatVotesResultsForGraph'
 import useCountDown from 'react-countdown-hook'
 import { shuffleSpeakersAction } from '../state/speakersAction'
+import { playWizzSound } from '../utils/playWizzSound'
 
 export const VotesResultsScreen = () => {
     const theme = useTheme()
@@ -74,6 +75,9 @@ export const VotesResultsScreen = () => {
                             value={timeLeft / 1000}
                             size={80}
                             fontSize={30}
+                            onCountdownEnd={() => {
+                                playWizzSound()
+                            }}
                         />
                     </Box>
                 </Grid>
@@ -88,7 +92,7 @@ export const VotesResultsScreen = () => {
                                 easing: 'inAndOut',
                                 startup: true,
                             },
-                            height: 400,
+                            height: 300,
                             backgroundColor: 'transparent',
                             bar: { groupWidth: '90%' },
                             legend: { position: 'none' },

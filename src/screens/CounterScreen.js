@@ -10,7 +10,7 @@ import { playWizzSound } from '../utils/playWizzSound'
 export const CounterScreen = () => {
     const state = useContext(StateContext)
     const dispatch = useContext(DispatchContext)
-    const [timeLeft, { start, pause, resume, reset }] = useCountDown(20000)
+    const [timeLeft, { start, pause, resume, reset }] = useCountDown(30000)
     const [countdownStatus, setCountdownStatus] = useState({
         isRunning: false,
         isPaused: false,
@@ -68,16 +68,17 @@ export const CounterScreen = () => {
 
             <Countdown
                 value={timeLeft / 1000}
-                size={400}
+                size={300}
                 fontSize={150}
                 onCountdownEnd={() => {
                     playWizzSound()
                 }}
             />
 
-            <Box display="flex" flexDirection="row">
+            <Box display="flex" flexDirection="row" justifyContent="center">
                 <Button
                     component={Link}
+                    style={{ fontSize: 30 }}
                     disabled={!prevSpeakerId}
                     onClick={() => prevSpeakerAction(dispatch)}
                     to={`/counter/${prevSpeakerId}`}>
@@ -88,6 +89,7 @@ export const CounterScreen = () => {
                 </Button>
 
                 <Button
+                    style={{ fontSize: 30 }}
                     component={Link}
                     disabled={!nextSpeakerId}
                     onClick={() => nextSpeakerAction(dispatch)}
@@ -96,7 +98,7 @@ export const CounterScreen = () => {
                 </Button>
             </Box>
 
-            <Box display="flex" flexDirection="row">
+            <Box display="flex" flexDirection="row" justifyContent="center">
                 <Button onClick={startStop}>Start/pause</Button>
                 <Button onClick={restart}>Restart</Button>
                 {!nextSpeakerId && (
