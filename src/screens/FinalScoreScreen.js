@@ -1,5 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Box, Button, Container, Grid, Typography } from '@material-ui/core'
+import {
+    Box,
+    Button,
+    CircularProgress,
+    Container,
+    Grid,
+    Typography,
+} from '@material-ui/core'
 import { DispatchContext, StateContext } from '../AppContext'
 import { useHistory } from 'react-router-dom'
 import { aggregatesFinalScores, createNewQuestion } from '../firebase/firebase'
@@ -40,6 +47,7 @@ export const FinalScoreScreen = () => {
                         </Grid>
                     </Grid>
                 ))}
+                {!scoreBoard.length && <CircularProgress />}
 
                 <br />
                 <br />
