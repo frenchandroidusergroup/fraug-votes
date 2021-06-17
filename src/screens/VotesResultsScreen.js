@@ -96,7 +96,7 @@ export const VotesResultsScreen = () => {
                                     top: 50,
                                     right: 130,
                                     bottom: 50,
-                                    left: 110,
+                                    left: 130,
                                 }}
                                 padding={0.25}
                                 minValue={0}

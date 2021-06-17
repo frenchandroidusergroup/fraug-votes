@@ -13,7 +13,7 @@ export const HomeScreen = () => {
     const firstSpeaker = state.speakers[firstSpeakerId].name
 
     const startNewGame = async () => {
-        await createNewGame(dispatch, state.speakers)
+        await createNewGame(dispatch)
         history.push(`/counter/${firstSpeakerId}`)
     }
 

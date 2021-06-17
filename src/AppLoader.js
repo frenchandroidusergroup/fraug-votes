@@ -15,7 +15,7 @@ export const AppLoader = (props) => {
         }
     }, [dispatch, state.gameId])
 
-    if (state.questionsLoaded && state.speakersLoaded) {
+    if (state.dataLoaded) {
         return props.children
     }
 

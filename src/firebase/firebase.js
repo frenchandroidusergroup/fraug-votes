@@ -25,6 +25,18 @@ const db = getFirestore()
 export const auth = getAuth()
 export const authProvider = new GoogleAuthProvider()
 
+const getSettingsSpeakers = async () => {
+    const querySnapshot = await getDocs(collection(db, 'settings'))
+
+    let speakers
+    querySnapshot.forEach((doc) => {
+        if (doc.id === 'admin') {
+            speakers = doc.data().speakers
+        }
+    })
+    return speakers
+}
+
 export const loadCurrentGame = async (dispatch) => {
     try {
         const querySnapshot = await getDocs(collection(db, 'settings'))
@@ -57,6 +69,9 @@ export const loadCurrentGame = async (dispatch) => {
             })
             await loadQuestions(dispatch, currentGameId)
         }
+        dispatch({
+            type: 'dataLoaded',
+        })
     } catch (error) {
         if (error.code === 'permission-denied') {
             alert(
@@ -99,7 +114,12 @@ export const listenToQuestion = async (dispatch, gameId, questionId) => {
     )
 }
 
-export const createNewGame = async (dispatch, speakers) => {
+export const createNewGame = async (dispatch) => {
+    const speakers = await getSettingsSpeakers()
+    dispatch({
+        type: 'speakersLoaded',
+        payload: speakers,
+    })
     const gameReference = await addDoc(collection(db, 'games'), {
         currentQuestion: 0,
         speakers,

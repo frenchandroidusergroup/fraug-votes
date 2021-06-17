@@ -15,6 +15,7 @@ export const DEFAULT_STATE = {
     activeQuestion: null,
     questionsLoaded: false,
     speakersLoaded: false,
+    dataLoaded: false,
     speakersOrder: [],
     speakersOrderCurrentIndex: 0,
     gameId: null,
@@ -23,6 +24,11 @@ export const DEFAULT_STATE = {
 export const appReducer = (state, { type, payload }) => {
     console.log(`Action: ${type}`, payload)
     switch (type) {
+        case 'dataLoaded':
+            return {
+                ...state,
+                dataLoaded: true,
+            }
         case 'questionsLoaded':
             return {
                 ...state,
