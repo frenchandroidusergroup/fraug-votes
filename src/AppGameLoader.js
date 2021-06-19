@@ -1,21 +1,30 @@
 import React, { useContext, useEffect } from 'react'
 import { Box, CircularProgress } from '@material-ui/core'
-import { loadSettings } from './firebase/firebase'
+import { loadCurrentGame } from './firebase/firebase'
 import { DispatchContext, StateContext } from './AppContext'
 
-// App Loader load database data, login, and display children when everything is ready
-export const AppLoader = (props) => {
+// Load a current game
+export const AppGameLoader = (props) => {
     const state = useContext(StateContext)
     const dispatch = useContext(DispatchContext)
 
     useEffect(() => {
-        if (!state.appSettings.dataLoaded) {
+        if (
+            state.appSettings.dataLoaded &&
+            !state.gameLoaded &&
+            state.appSettings.currentGameId
+        ) {
             // noinspection JSIgnoredPromiseFromCall
-            loadSettings(dispatch)
+            loadCurrentGame(dispatch, state.appSettings.currentGameId)
         }
-    }, [dispatch, state.appSettings.dataLoaded])
+    }, [
+        dispatch,
+        state.gameLoaded,
+        state.appSettings.dataLoaded,
+        state.appSettings.currentGameId,
+    ])
 
-    if (state.appSettings.dataLoaded) {
+    if (state.gameLoaded) {
         return props.children
     }
 

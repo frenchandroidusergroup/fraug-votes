@@ -23,10 +23,10 @@ export const theme = responsiveFontSizes(
         },
         typography: {
             h2: {
-                fontSize: 40,
+                fontSize: 50,
             },
             h3: {
-                fontSize: 28,
+                fontSize: 35,
             },
         },
     })

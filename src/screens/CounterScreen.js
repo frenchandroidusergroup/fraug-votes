@@ -6,6 +6,8 @@ import { Countdown } from '../components/Countdown'
 import { DispatchContext, StateContext } from '../AppContext'
 import { nextSpeakerAction, prevSpeakerAction } from '../state/speakersAction'
 import { playWizzSound } from '../utils/playWizzSound'
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
+import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 
 export const CounterScreen = () => {
     const state = useContext(StateContext)
@@ -80,13 +82,13 @@ export const CounterScreen = () => {
                 <Box display="flex" flexDirection="row" justifyContent="center">
                     <Button
                         component={Link}
-                        style={{ fontSize: 30 }}
+                        style={{ fontSize: 30, marginRight: 40 }}
                         disabled={!prevSpeakerId}
+                        startIcon={<ArrowBackIcon />}
                         onClick={() => prevSpeakerAction(dispatch)}
                         to={`/counter/${prevSpeakerId}`}>
-                        Prev{' '}
                         {prevSpeakerId
-                            ? `(${state.speakers[prevSpeakerId].name})`
+                            ? `${state.speakers[prevSpeakerId].name}`
                             : ''}
                     </Button>
 
@@ -94,10 +96,10 @@ export const CounterScreen = () => {
                         style={{ fontSize: 30 }}
                         component={Link}
                         disabled={!nextSpeakerId}
+                        endIcon={<ArrowForwardIcon />}
                         onClick={() => nextSpeakerAction(dispatch)}
                         to={`/counter/${nextSpeakerId}`}>
-                        Next (
-                        {nextSpeakerId && state.speakers[nextSpeakerId].name})
+                        {nextSpeakerId && state.speakers[nextSpeakerId].name}
                     </Button>
                     {!nextSpeakerId && (
                         <Button

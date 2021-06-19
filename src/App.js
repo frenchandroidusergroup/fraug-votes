@@ -12,6 +12,7 @@ import './firebase/firebase'
 import { appReducer, DEFAULT_STATE } from './state/appReducer'
 import { StateContext, DispatchContext } from './AppContext'
 import { Login } from './components/Login'
+import { AppGameLoader } from './AppGameLoader'
 
 export const App = () => {
     const [state, dispatch] = useReducer(appReducer, DEFAULT_STATE)
@@ -33,26 +34,30 @@ export const App = () => {
                                                 path="/"
                                                 component={HomeScreen}
                                             />
-                                            <Route
-                                                path="/counter/:speakerId"
-                                                render={(props) => (
-                                                    <CounterScreen
-                                                        key={
-                                                            props.match.params
-                                                                .speakerId
-                                                        }
-                                                    />
-                                                )}
-                                            />
-                                            <Route
-                                                path="/votes"
-                                                component={VotesResultsScreen}
-                                            />
-                                            <Route
-                                                path="/scores"
-                                                component={FinalScoreScreen}
-                                            />
-
+                                            <AppGameLoader>
+                                                <Route
+                                                    path="/counter/:speakerId"
+                                                    render={(props) => (
+                                                        <CounterScreen
+                                                            key={
+                                                                props.match
+                                                                    .params
+                                                                    .speakerId
+                                                            }
+                                                        />
+                                                    )}
+                                                />
+                                                <Route
+                                                    path="/votes"
+                                                    component={
+                                                        VotesResultsScreen
+                                                    }
+                                                />
+                                                <Route
+                                                    path="/scores"
+                                                    component={FinalScoreScreen}
+                                                />
+                                            </AppGameLoader>
                                             <Route
                                                 component={HomeScreen}
                                                 status={404}

@@ -37,41 +37,29 @@ const getSettingsSpeakers = async () => {
     return speakers
 }
 
-export const loadCurrentGame = async (dispatch) => {
+export const loadSettings = async (dispatch) => {
     try {
         const querySnapshot = await getDocs(collection(db, 'settings'))
 
+        let speakers
         let currentGameId
         querySnapshot.forEach((doc) => {
             if (doc.id === 'admin') {
-                const data = doc.data()
-                dispatch({
-                    type: 'speakersLoaded',
-                    payload: data.speakers,
-                })
-                currentGameId = data.currentGame
+                speakers = doc.data().speakers
+                currentGameId = doc.data().currentGame
             }
         })
-        if (currentGameId) {
-            dispatch({
-                type: 'gameLoaded',
-                payload: currentGameId,
-            })
-            const gameSnapshot = await getDoc(doc(db, `games/${currentGameId}`))
-            const gameData = gameSnapshot.data()
-            dispatch({
-                type: 'activeQuestionChanged',
-                payload: gameData.currentQuestion,
-            })
-            dispatch({
-                type: 'speakersLoaded',
-                payload: gameData.speakers,
-            })
-            await loadQuestions(dispatch, currentGameId)
-        }
         dispatch({
-            type: 'dataLoaded',
+            type: 'appSettingsLoaded',
+            payload: {
+                speakers,
+                currentGameId,
+            },
         })
+        return {
+            speakers,
+            currentGameId,
+        }
     } catch (error) {
         if (error.code === 'permission-denied') {
             alert(
@@ -82,6 +70,26 @@ export const loadCurrentGame = async (dispatch) => {
         }
         console.error(error)
     }
+}
+
+export const loadCurrentGame = async (dispatch, gameId) => {
+    if (gameId) {
+        const gameSnapshot = await getDoc(doc(db, `games/${gameId}`))
+        const gameData = gameSnapshot.data()
+        dispatch({
+            type: 'activeQuestionChanged',
+            payload: gameData.currentQuestion,
+        })
+        dispatch({
+            type: 'speakersLoaded',
+            payload: gameData.speakers,
+        })
+        await loadQuestions(dispatch, gameId)
+        dispatch({
+            type: 'gameLoaded',
+            payload: gameId,
+        })
+    } else console.warn('Attempt to resume game but no currentGameId provided')
 }
 
 export const loadQuestions = async (dispatch, gameId) => {

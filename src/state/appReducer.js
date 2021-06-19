@@ -15,19 +15,28 @@ export const DEFAULT_STATE = {
     activeQuestion: null,
     questionsLoaded: false,
     speakersLoaded: false,
-    dataLoaded: false,
     speakersOrder: [],
     speakersOrderCurrentIndex: 0,
+    appSettings: {
+        currentGameId: null,
+        speakers: null,
+        dataLoaded: false,
+    },
     gameId: null,
+    gameLoaded: false,
 }
 
 export const appReducer = (state, { type, payload }) => {
     console.log(`Action: ${type}`, payload)
     switch (type) {
-        case 'dataLoaded':
+        case 'appSettingsLoaded':
             return {
                 ...state,
-                dataLoaded: true,
+                appSettings: {
+                    currentGameId: payload.currentGameId,
+                    speakers: payload.speakers,
+                    dataLoaded: true,
+                },
             }
         case 'questionsLoaded':
             return {
@@ -76,6 +85,7 @@ export const appReducer = (state, { type, payload }) => {
             return {
                 ...state,
                 gameId: payload,
+                gameLoaded: true,
             }
         default:
             throw new Error()
