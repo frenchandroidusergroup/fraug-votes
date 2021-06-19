@@ -75,8 +75,8 @@ export const VotesResultsScreen = () => {
                             <Box margin={2}>
                                 <Countdown
                                     value={timeLeft / 1000}
-                                    size={80}
-                                    fontSize={30}
+                                    size={110}
+                                    fontSize={50}
                                     onCountdownEnd={() => {
                                         playWizzSound()
                                     }}
@@ -89,14 +89,14 @@ export const VotesResultsScreen = () => {
                                 keys={['Votes']}
                                 indexBy="name"
                                 theme={{
-                                    fontSize: 24,
+                                    fontSize: 35,
                                 }}
                                 colors={getColor(theme)}
                                 margin={{
                                     top: 50,
                                     right: 130,
                                     bottom: 50,
-                                    left: 130,
+                                    left: 170,
                                 }}
                                 padding={0.25}
                                 minValue={0}
@@ -125,6 +125,7 @@ export const VotesResultsScreen = () => {
                     <Button
                         component={Link}
                         to="/scores"
+                        style={{ float: 'right' }}
                         onClick={() => {
                             toggleVotesOpen(
                                 state.gameId,
