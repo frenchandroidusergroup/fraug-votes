@@ -1,12 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import {
-    Box,
-    Button,
-    Container,
-    Grid,
-    Typography,
-    useTheme,
-} from '@material-ui/core'
+import { Box, Button, Container, Grid, Typography } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import { Countdown } from '../components/Countdown'
 import { listenToVotes, toggleVotesOpen } from '../firebase/firebase'
@@ -18,10 +11,9 @@ import {
 import useCountDown from 'react-countdown-hook'
 import { shuffleSpeakersAction } from '../state/speakersAction'
 import { playWizzSound } from '../utils/playWizzSound'
-import { ResponsiveBar } from '@nivo/bar'
+import { BarGraph } from '../components/BarGraph'
 
 export const VotesResultsScreen = () => {
-    const theme = useTheme()
     const dispatch = useContext(DispatchContext)
     const state = useContext(StateContext)
     const [graphData, setGraphData] = useState({
@@ -46,13 +38,7 @@ export const VotesResultsScreen = () => {
                 })
             }
         )
-    }, [
-        dispatch,
-        state.gameId,
-        state.activeQuestion,
-        state.speakers,
-        theme.palette.players,
-    ])
+    }, [dispatch, state.gameId, state.activeQuestion, state.speakers])
 
     useEffect(() => {
         shuffleSpeakersAction(state.speakers, dispatch)
@@ -62,6 +48,8 @@ export const VotesResultsScreen = () => {
         start()
         document.body.style.zoom = 1
     }, [start])
+
+    console.log(graphData.data)
 
     return (
         <Box alignItems="center" display="flex" minHeight="100vh">
@@ -84,39 +72,13 @@ export const VotesResultsScreen = () => {
                             </Box>
                         </Grid>
                         <Grid item sm={12}>
-                            <ResponsiveBar
+                            <BarGraph
                                 data={graphData.data}
                                 keys={['Votes']}
                                 indexBy="name"
-                                theme={{
-                                    fontSize: 35,
-                                }}
-                                colors={getColor(theme)}
-                                margin={{
-                                    top: 50,
-                                    right: 130,
-                                    bottom: 50,
-                                    left: 170,
-                                }}
-                                padding={0.25}
-                                minValue={0}
-                                height={400}
-                                layout="horizontal"
-                                valueScale={{ type: 'linear' }}
-                                indexScale={{ round: true }}
-                                borderRadius={10}
-                                axisTop={null}
-                                axisRight={null}
                                 axisBottom={{
                                     tickValues: graphData.axisValues,
                                 }}
-                                axisLeft={{
-                                    tickSize: 0,
-                                    tickPadding: 15,
-                                }}
-                                enableGridY={false}
-                                enableLabel={false}
-                                animate={true}
                             />
                             <br />
                         </Grid>
@@ -139,7 +101,4 @@ export const VotesResultsScreen = () => {
             </Container>
         </Box>
     )
-}
-const getColor = (theme) => (bar) => {
-    return theme.palette.players[bar.index]
 }

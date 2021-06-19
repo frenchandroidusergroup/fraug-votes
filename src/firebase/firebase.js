@@ -215,33 +215,19 @@ export const aggregatesFinalScores = async (speakers, gameId) => {
             collection(db, `games/${gameId}/questions/${questionId}/votes`)
         )
         const votesResults = aggregateVotes(votesSnapshots)
-        if (!Object.keys(votesResults).length) {
-            continue
-        }
-        const mapByScores = Object.keys(votesResults).reduce(
-            (acc, speakerId) => {
-                if (!acc[votesResults[speakerId]]) {
-                    acc[votesResults[speakerId]] = []
-                }
-                acc[votesResults[speakerId]].push(speakerId)
-                return acc
-            },
-            {}
-        )
 
-        // Get the last element in the array
-        Object.values(mapByScores)[Object.keys(mapByScores).length - 1].forEach(
-            (speakerId) => {
-                console.log('winner', speakerId)
-                results[speakerId]++
+        Object.keys(votesResults).forEach((speakerId) => {
+            if (!results[speakerId]) {
+                results[speakerId] = 0
             }
-        )
+            results[speakerId] += votesResults[speakerId]
+        })
     }
 
     return Object.keys(results)
         .filter((speakerId) => !!speakers[speakerId]) //only list referenced speakers
         .sort((a, b) => {
-            return results[b] - results[a]
+            return results[a] - results[b]
         })
         .map((speakerId) => {
             return {

@@ -4,13 +4,13 @@ import {
     Button,
     CircularProgress,
     Container,
-    Grid,
     Typography,
 } from '@material-ui/core'
 import { DispatchContext, StateContext } from '../AppContext'
 import { useHistory } from 'react-router-dom'
 import { aggregatesFinalScores, createNewQuestion } from '../firebase/firebase'
 import { playApplaudSound } from '../utils/playApplaudSound'
+import { BarGraph } from '../components/BarGraph'
 
 export const FinalScoreScreen = () => {
     const dispatch = useContext(DispatchContext)
@@ -34,45 +34,46 @@ export const FinalScoreScreen = () => {
 
     return (
         <Box alignItems="center" display="flex" minHeight="100vh">
-            <Container maxWidth="sm">
-                <Typography variant="h1">Scores</Typography>
-                <br />
-                <br />
+            <Container maxWidth="md">
+                <Box display="flex" flexDirection="column" flex={1}>
+                    <Typography variant="h1">Scores</Typography>
 
-                {scoreBoard.map((line) => (
-                    <Grid container key={line.name}>
-                        <Grid item sm={4}>
-                            <Typography variant="h2">{line.name}</Typography>
-                        </Grid>
-                        <Grid item sm={8}>
-                            <Typography variant="h2">{line.score}</Typography>
-                        </Grid>
-                    </Grid>
-                ))}
-                {!scoreBoard.length && <CircularProgress />}
+                    <Box flex={1} height={400}>
+                        <BarGraph
+                            data={scoreBoard}
+                            keys={['score']}
+                            indexBy="name"
+                            axisBottom={null}
+                            enableLabel={true}
+                        />
+                        <br />
+                    </Box>
 
-                <br />
-                <br />
-                <br />
+                    {!scoreBoard.length && <CircularProgress />}
 
-                {!isFinished && (
+                    <br />
+                    <br />
+                    <br />
+
+                    {!isFinished && (
+                        <Button
+                            style={{ fontSize: 20 }}
+                            onClick={async () => {
+                                await createNewQuestion(dispatch, state.gameId)
+                                history.push(`/counter/${nextSpeakerId}`)
+                            }}>
+                            {nextSpeaker} commence la question suivante !
+                        </Button>
+                    )}
                     <Button
                         style={{ fontSize: 20 }}
-                        onClick={async () => {
-                            await createNewQuestion(dispatch, state.gameId)
-                            history.push(`/counter/${nextSpeakerId}`)
+                        onClick={() => {
+                            setFinished(true)
+                            playApplaudSound()
                         }}>
-                        {nextSpeaker} commence la question suivante !
+                        👏
                     </Button>
-                )}
-                <Button
-                    style={{ fontSize: 20 }}
-                    onClick={() => {
-                        setFinished(true)
-                        playApplaudSound()
-                    }}>
-                    👏
-                </Button>
+                </Box>
             </Container>
         </Box>
     )
