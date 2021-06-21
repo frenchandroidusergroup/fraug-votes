@@ -16,9 +16,7 @@ export const formatVotesResultsForGraph = (results, speakers) => {
             })
             .map((speakerId, index) => {
                 return {
-                    name: speakers[speakerId]
-                        ? speakers[speakerId].name
-                        : speakerId,
+                    name: speakerId,
                     Votes: resultsWithAllSpeakers[speakerId]
                         ? resultsWithAllSpeakers[speakerId]
                         : 0,
