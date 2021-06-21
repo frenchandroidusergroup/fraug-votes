@@ -12,6 +12,10 @@ import useCountDown from 'react-countdown-hook'
 import { shuffleSpeakersAction } from '../state/speakersAction'
 import { playWizzSound } from '../utils/playWizzSound'
 import { BarGraph } from '../components/BarGraph'
+import {
+    playWaitingVotesSound,
+    stopWaitingVoteAudio,
+} from '../utils/playWaitingVotesSound'
 
 export const VotesResultsScreen = () => {
     const dispatch = useContext(DispatchContext)
@@ -46,10 +50,12 @@ export const VotesResultsScreen = () => {
 
     useEffect(() => {
         start()
+        playWaitingVotesSound()
         document.body.style.zoom = 1
+        return () => {
+            stopWaitingVoteAudio()
+        }
     }, [start])
-
-    console.log(graphData.data)
 
     return (
         <Box alignItems="center" display="flex" minHeight="100vh">

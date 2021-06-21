@@ -165,10 +165,6 @@ export const createNewQuestion = async (dispatch, gameId) => {
     })
 }
 
-export const changeActiveQuestion = async () => {
-    console.log('TODO')
-}
-
 export const listenToVotes = async (
     dispatch,
     gameId,

@@ -2,10 +2,6 @@
 
 Simple realtime client app to display ongoing votes for a meetups/live questions session.
 
-## TODO
-
--   [ ] finir les TODOS dans le code
-
 ## Setup
 
 1. Copy `.env.example` to `.env` and complete it with your firebase credentials.
